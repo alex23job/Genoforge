@@ -18,6 +18,11 @@ public class MainGameUI : MonoBehaviour
         
     }
 
+    public void ViewRecord()
+    {
+
+    }
+
     public void LoadBattleScene()
     {
         SceneManager.LoadScene("BattleScene");
