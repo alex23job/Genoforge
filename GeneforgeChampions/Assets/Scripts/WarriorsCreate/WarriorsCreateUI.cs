@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class WarriorsCreateUI : MonoBehaviour
 {
+    [SerializeField] private Image _imgArrows;
+    [SerializeField] private GameObject _sphere;
+    [SerializeField] private Text[] _arrRndTexts;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +20,11 @@ public class WarriorsCreateUI : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void OnCreateWarriorsClick()
+    {
+
     }
 
     public void CreatingExit()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class WarPersonObraz
@@ -118,6 +119,20 @@ public struct Genofond
             _protection = 1;
             _magic = 1;
         }
+    }
+
+    public int[] GetCharcs()
+    {
+        List<int> res = new List<int>();
+        res.Add(_power);
+        res.Add(_endurance);
+        res.Add(_intellect);
+        res.Add(_accuracy);
+        res.Add(_rage);
+        res.Add(_regeneration);
+        res.Add(_protection);
+        res.Add(_magic);
+        return res.ToArray();
     }
 
     public string ToCsvString(char sep = ';')

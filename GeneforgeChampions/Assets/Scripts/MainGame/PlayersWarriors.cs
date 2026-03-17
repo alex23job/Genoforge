@@ -65,6 +65,17 @@ public class PlayersWarriors : MonoBehaviour
         return 1;
     }
 
+    public WarPersonObraz[] GetAllWarriors()
+    {
+        WarPersonObraz[] rez = new WarPersonObraz[CountWarriors];
+        int count = 0;
+        foreach(WarPersonObraz wpo in _personObrazs)
+        {
+            rez[count++] = new WarPersonObraz(wpo.WarID, wpo.NameWarrior, wpo.Type, new Genofond(wpo.ToCsvString()), wpo.Exp);
+        }
+        return rez;
+    }
+
     public void CreateAllObrazs(string csvString)
     {
         _loadingCsvWarriorsString = csvString;
