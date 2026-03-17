@@ -30,6 +30,7 @@ public class MainGameUI : MonoBehaviour
 
     public void QuitGame()
     {
+        GameManager.Instance.SaveGame();
         Application.Quit();
     }
 }

@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
                 {
                     mm_control.ViewRecord();
                 }
+                PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "warrior", 0, new Genofond(5, 20, 1, 1, 1, 1, 1, 1), 0));
             }
             file.Close();
         }
@@ -91,6 +92,7 @@ public class GameManager : MonoBehaviour
                 //mm_control.ViewScore();
                 //mm_control.UpdateAudioSource();
             }
+            PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "warrior", 0, new Genofond(5, 20, 1, 1, 1, 1, 1, 1), 0));
         }
 #endif
     }
@@ -108,11 +110,13 @@ public class GameManager : MonoBehaviour
         if (data.csvGarage == "")
         {
             //PlayersGarage.Instance.AddCar(4);
+            PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "warrior", 0, new Genofond(5, 20, 1, 1, 1, 1, 1, 1), 0));
         }
         else
         {
             //PlayersGarage.Instance.CreateAllPassports(data.csvGarage);
             //PlayersGarage.Instance.SetGarageCsvString(data.csvGarage);
+            PlayersWarriors.Instance.SetWarriorsCsvString(data.csvGarage);
         }
 
         GameManager.Instance.currentPlayer.numberBonusDay = data.currentBonusDay;
@@ -126,7 +130,7 @@ public class GameManager : MonoBehaviour
 
 
         //Debug.Log("Game data loaded! Score=" + GameManager.Instance.currentPlayer.totalScore.ToString() + "  Gold=" + GameManager.Instance.currentPlayer.totalGold.ToString());
-        Debug.Log($"Game data loaded! Score={GameManager.Instance.currentPlayer.totalScore}  Gold={GameManager.Instance.currentPlayer.totalGold}  garageStr=<{data.csvGarage}>");
+        Debug.Log($"Game data loaded! Score={GameManager.Instance.currentPlayer.totalScore}  Gold={GameManager.Instance.currentPlayer.totalGold}  warriorsStr=<{data.csvWarriors}>");
         //Debug.Log($"Game data loaded! Score={GameManager.Instance.currentPlayer.totalScore} Pos={GameManager.Instance.currentPlayer.oldPosition}");
 
         if (mm_control != null)
@@ -141,7 +145,7 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
-        if (GameManager.Instance.currentPlayer.totalScore == 0) return;
+        //  if (GameManager.Instance.currentPlayer.totalScore == 0) return; //  проверка на обнуление данных
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath
           + "/MySaveData.dat");
@@ -160,6 +164,8 @@ public class GameManager : MonoBehaviour
         //data.csvGarage = PlayersGarage.Instance.GarageToCsvString();
         //data.csvGarage = PlayersGarage.Instance.PassportsToCsvString();
         //data.csvInventory = GameManager.Instance.currentPlayer.inventory.ToCsvString();
+
+        data.csvWarriors = PlayersWarriors.Instance.WarriorsToCsvString();
 
         data.isHints = GameManager.Instance.currentPlayer.isHintView;
         data.isFone = GameManager.Instance.currentPlayer.isSoundFone;
@@ -329,6 +335,7 @@ public class SaveData
     public int currentBonusDay = 0;
     public string bonusTime = "";
     public string csvInventory = "";
+    public string csvWarriors = "";
 
     public bool isFone;
     public bool isEffects;
