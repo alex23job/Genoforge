@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
                 {
                     mm_control.ViewRecord();
                 }
-                PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "warrior", 0, new Genofond(5, 20, 1, 1, 1, 1, 1, 1), 0));
+                PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "Воин", 0, new Genofond(1, 20, 1, 1, 1, 1, 1, 1), 0));
             }
             file.Close();
         }
@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
                 //mm_control.ViewScore();
                 //mm_control.UpdateAudioSource();
             }
-            PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "warrior", 0, new Genofond(5, 20, 1, 1, 1, 1, 1, 1), 0));
+            PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "Воин", 0, new Genofond(1, 20, 1, 1, 1, 1, 1, 1), 0));
         }
 #endif
     }
@@ -107,16 +107,13 @@ public class GameManager : MonoBehaviour
         GameManager.Instance.currentPlayer.nameOldScene = data.scene;
         GameManager.Instance.currentPlayer.CsvToPosAndRot(data.posAndRot);
         //GameManager.Instance.currentPlayer.inventory = new Inventory(data.csvInventory);
-        if (data.csvGarage == "")
+        if (data.csvWarriors == "")
         {
-            //PlayersGarage.Instance.AddCar(4);
-            PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "warrior", 0, new Genofond(5, 20, 1, 1, 1, 1, 1, 1), 0));
+            PlayersWarriors.Instance.AddingWarriorObraz(new WarPersonObraz(0, "Воин", 0, new Genofond(1, 20, 1, 1, 1, 1, 1, 1), 0));
         }
         else
         {
-            //PlayersGarage.Instance.CreateAllPassports(data.csvGarage);
-            //PlayersGarage.Instance.SetGarageCsvString(data.csvGarage);
-            PlayersWarriors.Instance.SetWarriorsCsvString(data.csvGarage);
+            PlayersWarriors.Instance.SetWarriorsCsvString(data.csvWarriors);
         }
 
         GameManager.Instance.currentPlayer.numberBonusDay = data.currentBonusDay;
@@ -192,6 +189,7 @@ public class GameManager : MonoBehaviour
 public class PlayerInfo
 {
     public bool isLoaded = false;
+    public bool isZastavkaView = false;
     public int totalScore = 0;
     public int sessionScore = 0;
     public int currentScore = 0;
@@ -201,6 +199,7 @@ public class PlayerInfo
     public int currentLevel = 1;
     public int numBoxRemoval = 0;
     public int countSecondRemoval = 300;
+    public int countAttempts = 2;
 
     public int numberBonusDay = 0;
     public DateTime acceptBonusTime = DateTime.Now;
@@ -255,6 +254,11 @@ public class PlayerInfo
 
         //sessionScore += currentScore;
         //if (sessionScore > totalScore) totalScore = sessionScore;
+    }
+
+    public void DayComplete()
+    {
+        countAttempts = 2;
     }
 
     public void LevelExpAndManyUpdate()

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CharacteristicsUI : MonoBehaviour
 {
+    [SerializeField] private Text _txtTitle;
     [SerializeField] private Text[] _txtArrCharcs;
 
     // Start is called before the first frame update
@@ -19,14 +20,21 @@ public class CharacteristicsUI : MonoBehaviour
         
     }
 
-    public void ViewCharacteristics(Genofond gen)
+    public void ViewCharacteristics(Genofond gen, string title)
     {
+        _txtTitle.text = title;
         int[] charcs = gen.GetCharcs();
         for (int i = 0; i < _txtArrCharcs.Length; i++)
         {
             if (i < charcs.Length)
             {
-                _txtArrCharcs[i].text = charcs[i].ToString();
+                if (i == 0)
+                {
+                    int power = 5 * charcs[i];
+                    //print($"charcs[{i}]={charcs[i]}   power={power}");
+                    _txtArrCharcs[i].text = $"{power}";
+                }
+                else _txtArrCharcs[i].text = charcs[i].ToString();
             }
         }
 

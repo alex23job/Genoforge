@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class WarPersonObraz
@@ -15,6 +16,15 @@ public class WarPersonObraz
     public int Type { get => _type; }
     public int Exp { get => _exp; }
     public Genofond GenoWar { get => _genofond; }
+
+    public string Title
+    {
+        get 
+        {
+            string strNum = (_warID > 0) ? _warID.ToString() : "";
+            return $"{_nameWarrior} {strNum}"; 
+        }
+    }
 
     public WarPersonObraz() { }
 
@@ -40,7 +50,7 @@ public class WarPersonObraz
         else
         {
             _warID = -1;
-            _genofond = new Genofond(5, 20, 1, 1, 1, 1, 1, 1);
+            _genofond = new Genofond(1, 20, 1, 1, 1, 1, 1, 1);
         }
     }
 
@@ -64,6 +74,19 @@ public class WarPersonObraz
         _exp += exp;
     }
 
+    public void CopyParams(WarPersonObraz wpo)
+    {
+        _exp += wpo._exp;
+        _genofond._power = wpo._genofond._power;
+        _genofond._endurance = wpo._genofond._endurance;
+        _genofond._intellect = wpo._genofond._intellect;
+        _genofond._accuracy = wpo._genofond._accuracy;
+        _genofond._rage = wpo._genofond._rage;
+        _genofond._regeneration = wpo._genofond._regeneration;
+        _genofond._protection = wpo._genofond._protection;
+        _genofond._magic = wpo._genofond._magic;
+    }
+
     public string ToCsvString(char sep = '=')
     {
         return $"{_warID}{sep}{_nameWarrior}{sep}{_type}{sep}{_exp}{sep}{_genofond.ToCsvString()}{sep}";
@@ -71,7 +94,7 @@ public class WarPersonObraz
 }
 
 [Serializable]
-public struct Genofond
+public class Genofond
 {
     public int _power;
     public int _endurance;
@@ -99,7 +122,7 @@ public struct Genofond
         string[] arr = csv.Split(sep, StringSplitOptions.RemoveEmptyEntries);
         if (arr.Length >= 8)
         {
-            if (int.TryParse(arr[0], out int a1)) _power = a1; else _power = 5;
+            if (int.TryParse(arr[0], out int a1)) _power = a1; else _power = 1;
             if (int.TryParse(arr[1], out int a2)) _endurance = a2; else _endurance = 20;
             if (int.TryParse(arr[2], out int a3)) _intellect = a3; else _intellect = 1;
             if (int.TryParse(arr[3], out int a4)) _accuracy = a4; else _accuracy = 1;
@@ -107,10 +130,11 @@ public struct Genofond
             if (int.TryParse(arr[5], out int a6)) _regeneration = a6; else _regeneration = 1;
             if (int.TryParse(arr[6], out int a7)) _protection = a7; else _protection = 1;
             if (int.TryParse(arr[7], out int a8)) _magic = a8; else _magic = 1;
+            //Debug.Log($"arr[0]={arr[0]}  a1={a1}  _power={_power}");
         }
         else
         {
-            _power = 5;
+            _power = 1;
             _endurance = 20;
             _intellect = 1;
             _accuracy = 1;

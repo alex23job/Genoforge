@@ -41,6 +41,7 @@ public class PlayersWarriors : MonoBehaviour
     public void SetWarriorsCsvString(string csvString)
     {
         _loadingCsvWarriorsString = csvString;
+        CreateAllObrazs(csvString);
     }
 
     public void AddingWarriorObraz(WarPersonObraz wpo)
@@ -48,7 +49,7 @@ public class PlayersWarriors : MonoBehaviour
         WarPersonObraz newWpo = new WarPersonObraz(GenerateNextWarriorID(), wpo.NameWarrior, wpo.Type, wpo.GenoWar, wpo.Exp);
         _personObrazs.Add(newWpo);
         _loadingCsvWarriorsString = WarriorsToCsvString("#");
-        print($"3) AddingWarriorObraz CountWarriors={CountWarriors} WarID={newWpo.WarID} war={newWpo.NameWarrior} csv={_loadingCsvWarriorsString}");
+        //print($"3) AddingWarriorObraz CountWarriors={CountWarriors} WarID={newWpo.WarID} war={newWpo.NameWarrior} csv={_loadingCsvWarriorsString}");
     }
 
     private int GenerateNextWarriorID()
@@ -65,13 +66,58 @@ public class PlayersWarriors : MonoBehaviour
         return 1;
     }
 
+    public void UpdateWarriorByID(int id, WarPersonObraz wpo)
+    {
+        foreach(WarPersonObraz obraz in _personObrazs)
+        {
+            if (id == obraz.WarID)
+            {
+                obraz.CopyParams(wpo);
+                _loadingCsvWarriorsString = WarriorsToCsvString("#");
+                break;
+            }
+        }
+    }
+
+    public void RemoveWarriorByID(int id)
+    {
+        int numWarrior = -1;
+        for (int i = 0; i < _personObrazs.Count; i++)
+        {
+            if (_personObrazs[i].WarID == id)
+            {
+                numWarrior = i; break;
+            }
+        }
+        if (numWarrior != -1)
+        {
+            _personObrazs.RemoveAt(numWarrior);
+            _loadingCsvWarriorsString = WarriorsToCsvString("#");
+        }
+    }
+
+    public void AddingExpToWarriorByID(int id, int exp)
+    {
+        foreach (WarPersonObraz obraz in _personObrazs)
+        {
+            if (id == obraz.WarID)
+            {
+                obraz.AddExp(exp);
+                _loadingCsvWarriorsString = WarriorsToCsvString("#");
+                break;
+            }
+        }
+    }
+
     public WarPersonObraz[] GetAllWarriors()
     {
         WarPersonObraz[] rez = new WarPersonObraz[CountWarriors];
         int count = 0;
         foreach(WarPersonObraz wpo in _personObrazs)
         {
-            rez[count++] = new WarPersonObraz(wpo.WarID, wpo.NameWarrior, wpo.Type, new Genofond(wpo.ToCsvString()), wpo.Exp);
+            //print($"GetAllWarriors count={count} {wpo.ToCsvString()}");
+            rez[count++] = new WarPersonObraz(wpo.WarID, wpo.NameWarrior, wpo.Type, new Genofond(wpo.GenoWar.ToCsvString()), wpo.Exp);
+            //print($"GetAllWarriors count={count} rez[{count - 1}]={rez[count - 1].ToCsvString()}");
         }
         return rez;
     }

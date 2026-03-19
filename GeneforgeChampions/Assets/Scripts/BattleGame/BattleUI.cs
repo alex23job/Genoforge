@@ -18,6 +18,16 @@ public class BattleUI : MonoBehaviour
         
     }
 
+    public void OnTroopsClick()
+    {
+        SceneManager.LoadScene("TroopsScene");
+    }
+
+    public void OnEndDayClick()
+    {
+        GameManager.Instance.currentPlayer.DayComplete();
+    }
+
     public void LoadMenuScene()
     {
         SceneManager.LoadScene("MainScene");
