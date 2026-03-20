@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
         {
             PlayersWarriors.Instance.SetWarriorsCsvString(data.csvWarriors);
         }
+        PlayersTroops.Instance.SetTroopsCsvString(data.csvTroops);
 
         GameManager.Instance.currentPlayer.numberBonusDay = data.currentBonusDay;
         GameManager.Instance.currentPlayer.SetAcceptBonusTime(data.bonusTime);
@@ -163,6 +164,7 @@ public class GameManager : MonoBehaviour
         //data.csvInventory = GameManager.Instance.currentPlayer.inventory.ToCsvString();
 
         data.csvWarriors = PlayersWarriors.Instance.WarriorsToCsvString();
+        data.csvTroops = PlayersTroops.Instance.TroopsToCsvString();
 
         data.isHints = GameManager.Instance.currentPlayer.isHintView;
         data.isFone = GameManager.Instance.currentPlayer.isSoundFone;
@@ -340,6 +342,7 @@ public class SaveData
     public string bonusTime = "";
     public string csvInventory = "";
     public string csvWarriors = "";
+    public string csvTroops = "";
 
     public bool isFone;
     public bool isEffects;
