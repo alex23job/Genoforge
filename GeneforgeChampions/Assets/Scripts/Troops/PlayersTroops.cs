@@ -45,6 +45,11 @@ public class PlayersTroops : MonoBehaviour
         CreateAllObrazs(csvString);
     }
 
+    public void UpdateCsvString()
+    {
+        _loadingCsvTroopsString = TroopsToCsvString("#");
+    }
+
     public void CreateAllObrazs(string csvString)
     {
         _loadingCsvTroopsString = csvString;
@@ -84,6 +89,18 @@ public class PlayersTroops : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public bool CheckWarriorByID(int warID)
+    {
+        foreach (TroopObraz to in _troopObrazs)
+        {
+            if (to.CheckWarObrazByID(warID))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void RemoveWarriorByID(int warID)

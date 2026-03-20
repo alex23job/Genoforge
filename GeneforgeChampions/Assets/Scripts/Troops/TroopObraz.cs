@@ -77,6 +77,18 @@ public class TroopObraz
         _warriors.Add(wpo);
     }
 
+    public bool CheckWarObrazByID(int id)
+    {
+        for (int i = 0; i < _warriors.Count; i++)
+        {
+            if (_warriors[i].WarID == id)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool RemoveWarObrazByID(int id)
     {
         for (int i = 0; i < _warriors.Count; i++)
@@ -88,6 +100,11 @@ public class TroopObraz
             }
         }
         return false;
+    }
+
+    public void RemoveWarObrazAt(int num)
+    {
+        _warriors.RemoveAt(num);
     }
 
     public WarPersonObraz[] GetWarriors()
