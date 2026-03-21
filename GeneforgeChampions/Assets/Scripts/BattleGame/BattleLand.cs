@@ -26,6 +26,8 @@ public class BattleLand : MonoBehaviour
 
     private BattleLand _battleLand = null;
 
+    private GameObject _selectTroop = null;
+
     private void Awake()
     {
         _battleLand = GetComponent<BattleLand>();
@@ -190,8 +192,71 @@ public class BattleLand : MonoBehaviour
             pos.z = _ofsY - row;
             GameObject build = Instantiate(_prefabBuilds[id], pos, Quaternion.identity);
             if (rot > 0) for (i = 0; i < rot; i++) build.transform.Rotate(0, 90, 0, Space.World);
+            BattlePoint bp = build.GetComponent<BattlePoint>();
+            if (bp != null)
+            {
+                bp.SetParams(id, _battleLand);
+            }
             //_lands[row * _nCols + col] = land;
             //_pole[row * _nCols + col] = id;
         }
+    }
+
+    public void BattlePointSelect(GameObject point)
+    {
+        if (_selectTroop != null)
+        {
+            print($"BattlePointSelect {point.name}");
+            Vector3 target = point.transform.position;
+            List<Vector3> path = GetCurPath(GetIndexByPosition(target), GetIndexByPosition(_selectTroop.transform.position));
+            TroopMovement tm = _selectTroop.GetComponent<TroopMovement>();
+            if (tm != null)
+            {
+                tm.SetPath(path);
+            }
+        }
+    }
+
+    public void TroopSelect(GameObject troop)
+    {
+        _selectTroop = troop;
+        print($"TroopSelect {troop.name}");
+    }
+
+    public List<Vector3> GetCurPath(int targetIndex, int startIndex)
+    {
+        List<Vector3> path = new List<Vector3>();
+        WavePath wavePath = new WavePath();
+        int[] pole = new int[_pole.Length];
+        for (int i = 0; i < _pole.Length; i++)
+        {
+            pole[i] = -1;
+            if (_pole[i] > 0) pole[i] = 0;
+        }
+        pole[targetIndex] = 0;
+        List<int> pathZn = wavePath.GetPath(startIndex, new int[] { targetIndex }, pole, _nCols);
+        string strPathZn = (pathZn != null) ? pathZn.Count.ToString() : "NULL !!!";
+        print($"GetCurPath(int)  index={targetIndex}   pathZn=<{pathZn}>   lenPath={strPathZn}");
+        int row, col;
+        if (pathZn != null && pathZn.Count > 0)
+        {
+            foreach (int zn in pathZn)
+            {
+                row = zn / _nCols;
+                col = zn % _nCols;
+                path.Add(new Vector3(_ofsX + col, 0.12f, _ofsY - row));
+                //print($"zn={zn}   point={path[path.Count - 1]}");
+            }
+        }
+        return path;
+    }
+
+    private int GetIndexByPosition(Vector3 pos)
+    {
+        int col = Mathf.RoundToInt(pos.x - _ofsX);
+        int row = Mathf.RoundToInt(_ofsY - pos.z);
+        int index = _nCols * row + col;
+        if ((index >= 0) && (index < _pole.Length)) return index;
+        return -1;
     }
 }
