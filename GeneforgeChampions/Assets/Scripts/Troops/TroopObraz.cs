@@ -21,7 +21,7 @@ public class TroopObraz
     
     public TroopObraz() { }
 
-    public TroopObraz(string csv, char sep = '=', char sep2 = ';')
+    public TroopObraz(string csv, char sep = '$', char sep2 = '%')
     {
         string[] arr = csv.Split(sep, StringSplitOptions.RemoveEmptyEntries);
         if (arr.Length >= 5)
@@ -36,7 +36,8 @@ public class TroopObraz
             {
                 for (int i = 0; i < arW.Length; i++)
                 {
-                    _warriors.Add(new WarPersonObraz(arW[i], sep2));
+                    _warriors.Add(new WarPersonObraz(arW[i]));
+                    //Debug.Log($"warrior {i} : <{arW[i]}>    csvNew=<{_warriors[_warriors.Count - 1].ToCsvString()}>");
                 }
             }
         }
@@ -112,7 +113,7 @@ public class TroopObraz
         return _warriors.ToArray();
     }
 
-    public string ToCsvString(char sep = '=', char sep2 = ';')
+    public string ToCsvString(char sep = '$', char sep2 = '%')
     {
         StringBuilder sb = new StringBuilder($"{_troopID}{sep}{_nameTroop}{sep}{Vector3ToCsvString(_posTroop)}{sep}{Vector3ToCsvString(_targetTroop)}{sep}");
         for (int i = 0; i < _warriors.Count; i++) sb.Append($"{_warriors[i].ToCsvString()}{sep2}");

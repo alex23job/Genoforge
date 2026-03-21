@@ -6,10 +6,13 @@ using static UnityEditor.Recorder.OutputPath;
 
 public class BattleLand : MonoBehaviour
 {
+    [SerializeField] private GameObject _troopPrefab;
     [SerializeField] private GameObject[] _prefabLands;
     [SerializeField] private GameObject[] _prefabBuilds;
     [SerializeField] private float _ofsX = -30f;
     [SerializeField] private float _ofsY = 13f;
+    [SerializeField] private Vector3 _outCastle;
+    [SerializeField] private GameObject[] _prefabWarriors;
 
     private LandShema _landShema = null;
     private GameObject[] _lands;
@@ -19,17 +22,64 @@ public class BattleLand : MonoBehaviour
     private int _nRows = 27;
     private int _nCols = 61;
 
+    private List<GameObject> _troops = new List<GameObject>();
+
+    private BattleLand _battleLand = null;
+
+    private void Awake()
+    {
+        _battleLand = GetComponent<BattleLand>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         CreateLandShema();
         CreatePole();
+        CreateTroops();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void CreateTroops()
+    {
+        TroopObraz[] troopObrazs = PlayersTroops.Instance.GetAllObrazs();
+        foreach(TroopObraz obraz in troopObrazs)
+        {
+            GameObject troop = Instantiate(_troopPrefab);
+            if (obraz.PositionTroop.y == 0)
+            {   //  отряд ещё не был использован => новый !!!
+                troop.transform.position = _outCastle;
+                PlayersTroops.Instance.SetPositionByID(obraz.TroopID, _outCastle);
+            }
+            else
+            {
+                troop.transform.position = obraz.PositionTroop;
+            }
+            Troop troopControl = troop.GetComponent<Troop>();
+            if (troopControl != null)
+            {
+                troopControl.SetObraz(obraz, _battleLand);
+            }
+            _troops.Add(troop);
+        }
+    }
+
+    public GameObject GetWarriorsPrefabByTypeID(int typeID)
+    {
+        foreach(GameObject prefab in _prefabWarriors)
+        {
+            WarriorPerson wp = prefab.GetComponent<WarriorPerson>();
+            if (wp != null)
+            {
+                if (wp.WarriorType == typeID) return prefab;
+            }
+        }
+        return null;
     }
 
     private void CreateLandShema()
@@ -129,6 +179,7 @@ public class BattleLand : MonoBehaviour
                 }
             }
         }
+        pos.y = 0.12f;
         foreach(int buildID in _builds)
         {
             int col = buildID & 0xff;

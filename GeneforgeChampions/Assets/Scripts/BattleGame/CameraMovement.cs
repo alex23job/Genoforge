@@ -15,12 +15,6 @@ public class CameraMovement : MonoBehaviour
         _cameraScrollbar.value = 0.3f;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnValueChanged()
     {
         float sumMax = _maxRight - _maxLeft;

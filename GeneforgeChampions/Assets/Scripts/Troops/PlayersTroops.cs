@@ -58,10 +58,11 @@ public class PlayersTroops : MonoBehaviour
         string[] ar = _loadingCsvTroopsString.Split(_defaultSeparator, System.StringSplitOptions.RemoveEmptyEntries);
         foreach (string troopCsv in ar)
         {
+            //print($"troopCsv <{troopCsv}>");
             //int id = CarPassport.GetCarIDFromCsv(carCsv, "=");
             //GameObject prefabCar = PrefabsPak.Instance.GetCarPrefab(id - 1);
             //GameObject car = Instantiate(prefabCar);
-            TroopObraz to = new TroopObraz(troopCsv, '=', ';');
+            TroopObraz to = new TroopObraz(troopCsv, '$', '%');
             //CarPassportInfo carPassport = new CarPassportInfo(carCsv);
             //if (carPassport != null)
             //{
@@ -147,6 +148,32 @@ public class PlayersTroops : MonoBehaviour
         }
     }
 
+    public void SetPositionByID(int id, Vector3 pos)
+    {
+        foreach (TroopObraz to in _troopObrazs)
+        {
+            if (to.TroopID == id)
+            {
+                to.SetPosition(pos);
+                _loadingCsvTroopsString = TroopsToCsvString();
+                return;
+            }
+        }
+    }
+
+    public void SetTargetByID(int id, Vector3 pos)
+    {
+        foreach (TroopObraz to in _troopObrazs)
+        {
+            if (to.TroopID == id)
+            {
+                to.SetTarget(pos);
+                _loadingCsvTroopsString = TroopsToCsvString();
+                return;
+            }
+        }
+    }
+
     private int GetNextTroopID()
     {
         if (CountTroops > 0)
@@ -169,7 +196,7 @@ public class PlayersTroops : MonoBehaviour
             StringBuilder sb = new StringBuilder();
             foreach (TroopObraz obraz in _troopObrazs)
             {
-                sb.Append($"{obraz.ToCsvString('=', ';')}{sep}");
+                sb.Append($"{obraz.ToCsvString('$', '%')}{sep}");
             }
             return sb.ToString();
         }
