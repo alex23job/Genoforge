@@ -82,14 +82,16 @@ public class SimpleBuild
     private int _row; // (landID >> 8) & 0xff;
     private int _id; // (landID >> 16) & 0x3f;
     private int _rot; // (landID >> 22) & 0x3;
+    private int _pointID; // (landID >> 24) & 0x7f;   
 
     public SimpleBuild() { }
-    public SimpleBuild(int row, int col, int id, int rot = 0)
+    public SimpleBuild(int row, int col, int id, int pointID, int rot = 0)
     {
-        this._col = col;
-        this._row = row;
-        this._id = id;
-        this._rot = rot;
+        _col = col;
+        _row = row;
+        _id = id;
+        _rot = rot;
+        _pointID = pointID;
     }
 
     public int Col { get { return _col; } }
@@ -100,12 +102,12 @@ public class SimpleBuild
     {
         get
         {
-            return (_rot << 22) + (_id << 16) + (_row << 8) + (_col);
+            return (_pointID << 24) + (_rot << 22) + (_id << 16) + (_row << 8) + (_col);
         }
     }
 
     public override string ToString()
     {
-        return $"ID={_id} Rot={_rot * 90} гр.  Row={_row} Col={_col}    Build={Build}";
+        return $"ID={_id} Rot={_rot * 90} гр.  Row={_row} Col={_col} PointID={_pointID}   Build={Build}";
     }
 }

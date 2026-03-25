@@ -54,13 +54,15 @@ public class GameManager : MonoBehaviour
 #if UNITY_WEBGL
         LoadYandex();
 #endif
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
         string filePath = Application.persistentDataPath + "/MySaveData.dat";
+        mm_control.ViewDebug($"filePath = <{filePath}>");
         if (File.Exists(filePath))
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileInfo fileInfo = new FileInfo(filePath);
             Debug.Log($"filePath = <{filePath}>    size = {fileInfo.Length}");
+            mm_control.ViewDebug($"filePath = <{filePath}>    size = {fileInfo.Length}");
             FileStream file = File.Open(filePath, FileMode.Open);
 
             if (fileInfo.Length > 0)
@@ -87,6 +89,7 @@ public class GameManager : MonoBehaviour
             if (mm_control != null)
             {
                 mm_control.ViewRecord();
+                mm_control.ViewDebug("There is no save data!");
                 //mm_control.OnPoleSelect(GameManager.Instance.currentPlayer.currentPole);
                 //mm_control.OnModeSelect(GameManager.Instance.currentPlayer.currentMode);
                 //mm_control.ViewScore();
@@ -134,6 +137,7 @@ public class GameManager : MonoBehaviour
         if (mm_control != null)
         {
             mm_control.ViewRecord();
+            //mm_control.ViewDebug($"Game data loaded! Score={GameManager.Instance.currentPlayer.totalScore}  Gold={GameManager.Instance.currentPlayer.totalGold}  warriorsStr=<{data.csvWarriors}>");
             //mm_control.ViewScore();
             //mm_control.UpdateSound();
             //mm_control.ViewScore();
@@ -209,6 +213,9 @@ public class PlayerInfo
     public string nameOldScene = "";
     public Vector3 oldPosition = Vector3.zero;
     public Vector3 oldRotation = Vector3.zero;
+
+    public TroopObraz playerTroop;
+    public TroopObraz enemyTroop;
 
     //public Inventory inventory;
 

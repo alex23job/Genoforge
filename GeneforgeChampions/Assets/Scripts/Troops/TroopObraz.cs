@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -111,6 +112,11 @@ public class TroopObraz
     public WarPersonObraz[] GetWarriors()
     {
         return _warriors.ToArray();
+    }
+    public List<WarPersonObraz> GetSortWarriors()
+    {
+        List<WarPersonObraz> res = _warriors.OrderBy(w => w.Type).ToList();
+        return res;
     }
 
     public string ToCsvString(char sep = '$', char sep2 = '%')

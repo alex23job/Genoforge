@@ -7,9 +7,15 @@ public class WarriorPerson : MonoBehaviour
 {
     [SerializeField] private int _typeID;
     private WarPersonObraz _personObraz;
+    private BattleWarrior _battleWarrior;
 
     public int WarriorType { get { return _typeID; } }
+    public WarPersonObraz ObrazWarrior { get { return _personObraz; } }
 
+    private void Awake()
+    {
+        _battleWarrior = GetComponent<BattleWarrior>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -22,8 +28,9 @@ public class WarriorPerson : MonoBehaviour
         
     }
 
-    public void SetObraz(WarPersonObraz wpo)
+    public void SetObraz(WarPersonObraz wpo, int nTr, int nPos)
     {
         _personObraz = wpo;
+        _battleWarrior.SetParams(wpo, nTr, nPos);
     }
 }

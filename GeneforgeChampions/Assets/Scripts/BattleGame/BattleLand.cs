@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Recorder.OutputPath;
 
 public class BattleLand : MonoBehaviour
 {
@@ -13,6 +12,8 @@ public class BattleLand : MonoBehaviour
     [SerializeField] private float _ofsY = 13f;
     [SerializeField] private Vector3 _outCastle;
     [SerializeField] private GameObject[] _prefabWarriors;
+    [SerializeField] private BattleUI _battleUI;
+    [SerializeField] private EnemyTroops _enemyTroops;
 
     private LandShema _landShema = null;
     private GameObject[] _lands;
@@ -138,10 +139,10 @@ public class BattleLand : MonoBehaviour
         _landShema.AddLandCeil(new SimpleLand(22, 26, 2, 2));
 
         //  точки для сражений
-        _landShema.AddBuild(new SimpleBuild(12, 21, 0));
-        _landShema.AddBuild(new SimpleBuild(16, 21, 1));
-        _landShema.AddBuild(new SimpleBuild(14, 27, 2));
-        _landShema.AddBuild(new SimpleBuild(19, 25, 3));
+        _landShema.AddBuild(new SimpleBuild(12, 21, 0, 1));
+        _landShema.AddBuild(new SimpleBuild(16, 21, 1, 2));
+        _landShema.AddBuild(new SimpleBuild(14, 27, 2, 3));
+        _landShema.AddBuild(new SimpleBuild(19, 25, 3, 4));
     }
 
     private void CreatePole()
@@ -188,6 +189,8 @@ public class BattleLand : MonoBehaviour
             int row = (buildID >> 8) & 0xff;
             int id = (buildID >> 16) & 0x3f;
             int rot = (buildID >> 22) & 0x3;
+            int pointID = (buildID >> 24) & 0x7f;
+            //print($"BuildPoint r={row} c={col} id={id} rot={rot} pointID={pointID}");
             pos.x = _ofsX + col;
             pos.z = _ofsY - row;
             GameObject build = Instantiate(_prefabBuilds[id], pos, Quaternion.identity);
@@ -195,11 +198,40 @@ public class BattleLand : MonoBehaviour
             BattlePoint bp = build.GetComponent<BattlePoint>();
             if (bp != null)
             {
-                bp.SetParams(id, _battleLand);
+                bp.SetParams(id, _battleLand, pointID, (pointID > 0));
             }
             //_lands[row * _nCols + col] = land;
             //_pole[row * _nCols + col] = id;
         }
+    }
+
+    public void LoadBattlefieldScene(GameObject point, GameObject myTroop)
+    {
+        Troop troop = myTroop.GetComponent<Troop>();
+        BattlePoint battlePoint = point.GetComponent<BattlePoint>();
+        if ((battlePoint != null) && (troop != null))
+        {
+            TroopObraz enemyObraz = null;
+            if (battlePoint.IsTroop)
+            {
+                enemyObraz = _enemyTroops.GetTroopObrazByID(battlePoint.PointID);
+                //print($"id={battlePoint.PointID}  obraz=<{enemyObraz}>");
+                GameManager.Instance.currentPlayer.playerTroop = troop.MyTroop;
+                GameManager.Instance.currentPlayer.enemyTroop = enemyObraz;
+                _battleUI.LoadBattlefieldScene();
+                //print($"1) LoadBattlefieldScene   myTroop=<{troop.MyTroop.ToCsvString()}>");
+                //print($"2) LoadBattlefieldScene   enemyTroop=<{enemyObraz.ToCsvString()}>");
+            }
+            else
+            {   //  объект без охраны =>  просто войти или забрать награду
+
+            }
+        }        
+    }
+
+    public void ViewHintPanel(bool value, string txtHint, Vector3 pos)
+    {
+        _battleUI.ViewHintPanel(value, txtHint, pos);
     }
 
     public void BattlePointSelect(GameObject point)
@@ -215,6 +247,15 @@ public class BattleLand : MonoBehaviour
                 tm.SetPath(path);
             }
         }
+    }
+
+    public TroopObraz GetEnemyTroop(int pointID)
+    {
+        if (_enemyTroops != null)
+        {
+            return _enemyTroops.GetTroopObrazByID(pointID);
+        }
+        return null;
     }
 
     public void TroopSelect(GameObject troop)

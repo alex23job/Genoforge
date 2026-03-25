@@ -13,6 +13,10 @@ public class TroopMovement : MonoBehaviour
     private float _rotationSpeed = 5f;
     private float stoppingDistance = 0.2f;
 
+    public GameObject MarkerRect { get {  return _troopRect; } } 
+
+    private BattleLand _battleLand = null;
+
     //private Animator anim;
     private Rigidbody rb;
 
@@ -44,6 +48,11 @@ public class TroopMovement : MonoBehaviour
             _target = _path[0];
             _isUsed = true;
         }
+    }
+
+    public void SetBattleLand(BattleLand bl)
+    {
+        _battleLand = bl;
     }
 
     public void MoveTroop(float dt)
@@ -104,6 +113,8 @@ public class TroopMovement : MonoBehaviour
     {
         if (other.CompareTag("BattlePoint"))
         {
+            _isUsed = false;
+            if (_battleLand != null) _battleLand.LoadBattlefieldScene(other.gameObject, gameObject);
         }
     }
 }

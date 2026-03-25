@@ -10,6 +10,8 @@ public class Troop : MonoBehaviour
     private TroopObraz _obraz = null;
     private List<GameObject> _troopWarriors = new List<GameObject>();
 
+    public TroopObraz MyTroop { get { return _obraz; } }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +28,8 @@ public class Troop : MonoBehaviour
     {
         _obraz = to;
         _battleLand = bl;
+        TroopMovement tm = gameObject.GetComponent<TroopMovement>();
+        if (tm != null) tm.SetBattleLand(bl);
         if ((_txtNameTroop != null) && (_obraz != null)) _txtNameTroop.text = _obraz.NameTroop;
         int i;
         WarPersonObraz[] warriors =  _obraz.GetWarriors();
@@ -40,7 +44,8 @@ public class Troop : MonoBehaviour
             if (prefab != null)
             {
                 GameObject warrior = Instantiate(prefab);
-                warrior.transform.parent = transform;
+                //warrior.transform.parent = transform;
+                warrior.transform.parent = tm.MarkerRect.transform;
                 warrior.transform.localPosition = new Vector3(0.16f - 0.32f * (i % 2), 0.035f, 0.25f - 0.25f * (i / 2));
                 _troopWarriors.Add(warrior);
             }

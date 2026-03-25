@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class MainGameUI : MonoBehaviour
 {
     [SerializeField] private GameObject _zastavka;
+    [SerializeField] private Text _txtDebug;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +30,11 @@ public class MainGameUI : MonoBehaviour
     public void ViewRecord()
     {
 
+    }
+
+    public void ViewDebug(string str)
+    {
+        _txtDebug.text = str;
     }
 
     public void LoadBattleScene()
